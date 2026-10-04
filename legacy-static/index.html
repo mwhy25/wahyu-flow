@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FlowBoxes - Drag & Drop Dataflow</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">FlowBoxes</div>
+  <div class="controls">
+    <button id="runBtn" class="primary">Run</button>
+    <button id="clearBtn">Clear outputs</button>
+    <button id="clearAllBtn" class="danger-ghost">Clear canvas</button>
+    <div class="ai-settings">
+      <span id="keyStatus" class="key-status" title="No key saved">○ No key</span>
+      <button id="keyBtn" title="Set / save OpenRouter key">API Key…</button>
+      <select id="modelSelect" title="OpenRouter model">
+        <option value="openai/gpt-4o-mini" selected>gpt-4o-mini</option>
+        <option value="anthropic/claude-3.5-haiku">claude-3.5-haiku</option>
+        <option value="google/gemini-flash-1.5">gemini-flash-1.5</option>
+        <option value="meta-llama/llama-3.1-8b-instruct">llama-3.1-8b</option>
+      </select>
+    </div>
+    <span class="hint">Drag boxes in &bull; drag from <span class="dot out"></span> to <span class="dot in"></span> to connect</span>
+  </div>
+  <div class="zoom-controls">
+    <button id="zoomOut">−</button>
+    <span id="zoomLabel">100%</span>
+    <button id="zoomIn">+</button>
+    <button id="resetView">Reset view</button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="palette">
+    <h3>Spawn boxes</h3>
+    <p class="muted">Drag onto canvas or click +</p>
+    <div id="paletteItems"></div>
+    <div class="help">
+      <h4>How it works</h4>
+      <ol>
+        <li>Spawn <b>Input</b> + <b>AI</b> + <b>Output</b></li>
+        <li>Drag <b>output port</b> (bottom) to <b>input port</b> (top)</li>
+        <li>Paste OpenRouter key top, pick model, click <b>Run</b></li>
+        <li>AI node: <b>System</b> = role, <b>User</b> uses <b>{{input}}</b></li>
+        <li>Prompt = free template, Code: <code>return ...</code></li>
+      </ol>
+      <p class="muted">Click an edge to select, Delete to remove. Right-click edge to delete.</p>
+    </div>
+  </aside>
+
+  <main class="canvas-wrap">
+    <div id="viewport">
+      <div id="world">
+        <div id="grid"></div>
+        <svg id="edges"></svg>
+        <div id="nodes"></div>
+        <svg id="dragEdgeLayer"><path id="dragEdge" class="drag-edge hidden" d="" /></svg>
+      </div>
+    </div>
+    <div id="log" class="log"></div>
+  </main>
+</div>
+
+<script src="app.js"></script>
+<div id="keyModal" class="modal hidden">
+  <div class="modal-card">
+    <h3>OpenRouter API Key</h3>
+    <p class="muted">Saved in this browser (localStorage). Get one at openrouter.ai/keys. It starts with <code>sk-or-…</code></p>
+    <input id="apiKey" type="password" placeholder="sk-or-..." autocomplete="off" spellcheck="false" />
+    <div class="modal-row">
+      <button id="toggleKey" title="Show/hide key">show</button>
+      <button id="saveKey" class="primary">Save</button>
+      <button id="clearKey" class="danger-ghost">Clear</button>
+      <button id="closeKey">Close</button>
+    </div>
+    <div id="keyMsg" class="status"></div>
+  </div>
+</div>
+</body>
+</html>
